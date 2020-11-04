@@ -7,12 +7,10 @@ function PostCreate() {
 
   const onSubmit = async event => {
     event.preventDefault()
-    await postsApi.post('/events', {
-      type: 'PostCreated',
-      data: { title, content }
-    })
+    await postsApi.post('/posts', { title, content })
     setTitle('')
     setContent('')
+    window.location.reload()
   }
 
   return (

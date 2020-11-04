@@ -8,6 +8,7 @@ function CommentCreate({ postId }) {
     event.preventDefault()
     await commentsApi.post(`/posts/${postId}/comments`, { content })
     setContent('')
+    window.location.reload()
   }
 
   return (

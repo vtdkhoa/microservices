@@ -1,36 +1,27 @@
-import React, { Component } from 'react'
-import { postsApi } from '../../apis'
+import React, { useState, useEffect } from 'react'
+import { query } from '../../apis'
 import CommentCreate from '../Comments/CommentCreate'
 import CommentList from '../Comments/CommentList'
 
-class PostList extends Component {
-  state = {
-    posts: {}
+function PostList() {
+  const [posts, setPosts] = useState({})
+
+  useEffect(() => {
+    fetchPosts()
+  }, [])
+
+  const fetchPosts = async () => {
+    const response = await query.get('/posts')
+    setPosts(response.data)
   }
 
-  componentDidMount() {
-    this.fetchPosts()
+  if (!posts) {
+    return <div>Loading...</div>
   }
 
-  // componentDidUpdate(prevState) {
-  //   if (prevState.posts !== this.state.posts) {
-  //     this.fetchPosts()
-  //   }
-  // }
-
-  async fetchPosts() {
-    const response = await postsApi.get('/posts')
-    console.log(response.data)
-    this.setState({ posts: response.data })
-  }
-
-  render() {
-    if (!this.state.posts) {
-      return <div>Loading...</div>
-    }
-
-    return (
-      Object.values(this.state.posts).map(post => (
+  return (
+    Object.values(posts).map(post => (
+      <div className="four wide column">
         <div key={post.id} className="ui card">
           <div className="content">
             <div className="header">{post.title}</div>
@@ -39,14 +30,14 @@ class PostList extends Component {
               <p>{post.content}</p>
             </div>
           </div>
-          <CommentList postId={post.id} />
+          <CommentList comments={post.comments} />
           <div className="extra content">
             <CommentCreate postId={post.id} />
           </div>
         </div>
-      ))
-    )
-  }
+      </div>
+    ))
+  )
 }
 
 export default PostList

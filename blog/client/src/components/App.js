@@ -14,9 +14,7 @@ function App() {
       <hr />
       <h1 className="ui header">Post List</h1>
       <div className="ui grid">
-        <div className="four wide column">
-          <PostList />
-        </div>
+        <PostList />
       </div>
     </div>
   )
