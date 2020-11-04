@@ -10,7 +10,6 @@ function PostCreate() {
     await postsApi.post('/posts', { title, content })
     setTitle('')
     setContent('')
-    window.location.reload()
   }
 
   return (

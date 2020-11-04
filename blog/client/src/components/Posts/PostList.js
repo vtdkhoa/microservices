@@ -21,8 +21,8 @@ function PostList() {
 
   return (
     Object.values(posts).map(post => (
-      <div className="four wide column">
-        <div key={post.id} className="ui card">
+      <div key={post.id} className="four wide column">
+        <div className="ui card">
           <div className="content">
             <div className="header">{post.title}</div>
             <div className="meta">Time</div>
