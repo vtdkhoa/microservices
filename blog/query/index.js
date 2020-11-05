@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const axios = require('axios')
 const chalk = require('chalk')
 
 const app = express()
@@ -9,13 +10,7 @@ app.use(cors())
 
 const posts = {}
 
-app.get('/posts', (req, res) => {
-  res.status(200).send(posts)
-})
-
-app.post('/events', (req, res) => {
-  const { type, data } = req.body
-
+const handleEvent = (type, data) => {
   if (type === 'PostCreated') {
     const { id, title, content } = data
     posts[id] = {
@@ -44,15 +39,29 @@ app.post('/events', (req, res) => {
     comment.status = status
     comment.content = content
   }
+}
 
-  console.log(posts)
+app.get('/posts', (req, res) => {
+  res.status(200).send(posts)
+})
+
+app.post('/events', (req, res) => {
+  const { type, data } = req.body
+  handleEvent(type, data)
 
   res.send({})
 })
 
-app.listen(4002, error => {
+app.listen(4002, async error => {
   if (error) {
     console.log(chalk.red('Server cannot run!'))
   }
   console.log(chalk.green('Listening on port 4002...'))
+
+  const response = await axios.get('http://localhost:4005/events')
+
+  for (let event of response.data) {
+    console.log('Processing event:', event.type)
+    handleEvent(event.type, event.data)
+  }
 })
